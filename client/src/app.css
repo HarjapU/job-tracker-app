@@ -1,0 +1,73 @@
+/* Add a black background color to the top navigation */
+.topnav {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background-color: #B0B0B0;
+    height: 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+}
+
+.settingsbutton {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.settings-menu {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.2);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+    margin-left: 45px;
+}
+
+.leftnav {
+    background-color: #B0B0B0;
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    padding-top: 125px;
+    justify-items: center;
+}
+
+.leftnav a {
+    text-decoration: none;
+    font-size: 20px;
+    color: #002742;
+    display:block;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.leftnav a:hover {
+    color: #FFFFFF;
+    background-color: #002742;
+    cursor: pointer;
+}
+
+.contentarea {
+  position: absolute; 
+  left: 242px;
+  top: 75px;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  padding: 20px;
+}
