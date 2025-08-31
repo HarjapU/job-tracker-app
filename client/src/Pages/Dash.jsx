@@ -1,5 +1,5 @@
 import settingsLogo from "../assets/settings.png";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../app.css";
 import { Link } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
@@ -10,21 +10,70 @@ export default function Main() {
   const [view, setView] = useState("dashboard");
   const [showSettings, setShowSettings] = useState(false);
   const [savedJobs, setSavedJobs] = useState([]);
+  const [jobs, setJobs] = useState([])
 
-  //CHANGE TO API LATER
-  const [jobs] = useState([
-    { id: 1, title: "Job Title", description: "Hello, everyone! This is the first job description ever..." },
-    { id: 2, title: "Job Title 2", description: "Hello, everyone! This is the second job description ever..." }
-  ]);
+  // keep the saved jobs updated
+  useEffect(() => {
+    fetchSavedJobs();
+  }, []);
 
+  // handle save button actions
   const handleToggleSave = (job) => {
-    if (savedJobs.find((j) => j.id === job.id)) {
-      setSavedJobs(savedJobs.filter((j) => j.id !== job.id));
+    if (savedJobs.find((j) => j.job_id === job.job_id)) {
+
+      // remove locally
+      setSavedJobs(savedJobs.filter((j) => j.job_id !== job.job_id));
+
+      // Remove from Firebase
+      deleteJobDatabase(job.job_id);
     } else {
+
+      // save locally
       setSavedJobs([...savedJobs, job]);
+
+      // save to firebase
+      saveJobDatabase(job)
     }
   };
 
+  // save to firebase database
+  async function saveJobDatabase(job) {
+    const res = await fetch("/api/save-job", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(job),
+    });
+    const data = await res.json();
+    console.log("Saved:", data);
+  }
+
+  // remove from firebase database
+  async function deleteJobDatabase(jobId) {
+    try {
+      const res = await fetch(`/api/delete-job/${jobId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      console.log("Deleted:", data);
+    } catch (err) {
+      console.error("Failed to delete job:", err);
+    }
+  }
+
+  // retrieves from firebase database
+  async function fetchSavedJobs() {
+    try {
+      const res = await fetch("/api/get-jobs");
+      const data = await res.json();
+
+      const jobsArray = data ? Object.values(data) : [];
+      setSavedJobs(jobsArray);
+    } catch (err) {
+      console.error("Failed to fetch saved jobs:", err);
+    }
+  }
+
+  // logic to determine content area display
   const renderContent = () => {
     switch (view) {
       case "dashboard":
@@ -35,7 +84,7 @@ export default function Main() {
       case "search":
         return (
           <div className="contentarea">
-            <SearchBar onSearch={(q) => console.log("Searching for ", q)} />
+            <SearchBar onSearch={(data) => setJobs(data)} />
             <SearchResults
               jobs={jobs}
               savedJobs={savedJobs}

@@ -5,9 +5,9 @@ export default function SearchResults({ jobs, savedJobs, onToggleSave }) {
     <div className="results">
       {jobs.map((job) => (
         <JobCard
-          key={job.id}
+          key={job.job_id}
           job={job}
-          isSaved={!!savedJobs.find((j) => j.id === job.id)}
+          isSaved={!!savedJobs.find((j) => j.job_id === job.job_id)}
           onToggleSave={onToggleSave}
         />
       ))}

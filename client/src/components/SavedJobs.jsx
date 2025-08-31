@@ -8,7 +8,7 @@ export default function SavedJobs({ savedJobs, onToggleSave }) {
         <p>No saved jobs yet.</p>
       ) : (
         savedJobs.map((job) => (
-          <JobCard key={job.id} job={job} isSaved={true} onToggleSave={onToggleSave} />
+          <JobCard key={job.job_id} job={job} isSaved={true} onToggleSave={onToggleSave} />
         ))
       )}
     </div>

@@ -15,6 +15,7 @@ lerna-debug.log*
 
 # Firebase
 firebase-adminsdk.json
+firebaseKey.json
 .firebase/
 
 # Build output
