@@ -9,6 +9,14 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:5000", 
         changeOrigin: true
+      },
+      "/account": {
+        target: "http://localhost:5000", 
+        changeOrigin: true
+      },
+      "/jobs": {
+        target: "http://localhost:5000", 
+        changeOrigin: true
       }
     }
   }

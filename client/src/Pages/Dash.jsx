@@ -10,7 +10,7 @@ export default function Main() {
   const [view, setView] = useState("dashboard");
   const [showSettings, setShowSettings] = useState(false);
   const [savedJobs, setSavedJobs] = useState([]);
-  const [jobs, setJobs] = useState([])
+  const [jobs, setJobs] = useState([]);
 
   // keep the saved jobs updated
   useEffect(() => {
@@ -36,9 +36,14 @@ export default function Main() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("Username");
+  }
+
   // save to firebase database
   async function saveJobDatabase(job) {
-    const res = await fetch("/api/save-job", {
+    console.log(localStorage.getItem("Username"));
+    const res = await fetch(`/jobs/save-job/${localStorage.getItem("Username")}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(job),
@@ -49,8 +54,9 @@ export default function Main() {
 
   // remove from firebase database
   async function deleteJobDatabase(jobId) {
+    console.log(localStorage.getItem("Username"));
     try {
-      const res = await fetch(`/api/delete-job/${jobId}`, {
+      const res = await fetch(`/jobs/delete-job/${jobId}/${localStorage.getItem("Username")}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -62,8 +68,9 @@ export default function Main() {
 
   // retrieves from firebase database
   async function fetchSavedJobs() {
+    console.log(localStorage.getItem("Username"));
     try {
-      const res = await fetch("/api/get-jobs");
+      const res = await fetch(`/jobs/get-jobs/${localStorage.getItem("Username")}`);
       const data = await res.json();
 
       const jobsArray = data ? Object.values(data) : [];
@@ -120,7 +127,7 @@ export default function Main() {
       {showSettings && (
         <div className="settings-menu">
           <Link to={"/"}>
-            <button>Logout</button>
+            <button onClick={handleLogout}>Logout</button>
           </Link>
         </div>
       )}

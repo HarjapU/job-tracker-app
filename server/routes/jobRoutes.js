@@ -4,15 +4,17 @@ import db from "../firebase.js";
 const router = express.Router();
 
 // Save a job
-router.post("/save-job", async (req, res) => {
+router.post("/save-job/:username", async (req, res) => {
   try {
     const job = req.body;
+    const {username} = req.params;
+    console.log(username)
 
     if (!job.job_id) {
       return res.status(400).json({ error: "Job has no id" });
     }
 
-    await db.ref("jobs/" + job.job_id).set(job);
+    await db.ref(`Accounts/${username}/jobs/` + job.job_id).set(job);
 
     res.status(200).json({ message: "Job saved successfully" });
   } catch (err) {
@@ -21,15 +23,16 @@ router.post("/save-job", async (req, res) => {
 });
 
 // delete job
-router.delete("/delete-job/:jobId", async (req, res) => {
+router.delete("/delete-job/:jobId/:username", async (req, res) => {
   try {
-    const jobId = req.params.jobId;
+    const {jobId, username} = req.params;
+    console.log(username)
 
     if (!jobId) {
       return res.status(400).json({ error: "Job ID is required" });
     }
 
-    await db.ref("jobs/" + jobId).remove();
+    await db.ref(`Accounts/${username}/jobs/` + jobId).remove();
 
     res.status(200).json({ message: "Job deleted successfully", jobId });
   } catch (err) {
@@ -40,9 +43,12 @@ router.delete("/delete-job/:jobId", async (req, res) => {
 
 
 // Get all jobs
-router.get("/get-jobs", async (req, res) => {
+router.get("/get-jobs/:username", async (req, res) => {
+  const {username} = req.params;
+  console.log(username)
+  
   try {
-    const snapshot = await db.ref("jobs").once("value");
+    const snapshot = await db.ref(`Accounts/${username}/jobs`).once("value");
     const jobs = snapshot.val() || {};
     res.json(jobs);
   } catch (err) {

@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
+import accountRoutes from "./routes/accountRoutes.js"
 import jobRoutes from "./routes/jobRoutes.js";
 
 const PORT = 5000;
@@ -8,7 +9,8 @@ const PORT = 5000;
 const app = express();
 app.use(express.json())
 
-app.use("/api", jobRoutes)
+app.use("/account", accountRoutes)
+app.use("/jobs", jobRoutes)
 
 // endpoint for API search
 app.get("/api/search", async (req, res) => {
